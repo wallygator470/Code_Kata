@@ -1,15 +1,25 @@
-import unittest
+import os
 
-def anagrams(word, words):
-    return [wrd for wrd in words if sorted(wrd) == sorted(word)]
+def main():
+  screen_clear()
+  test_function('silent', 'listen', True)
+  test_function('fairy tales', 'safety rail', True)
+  test_function('help me', 'listen', False)
+  test_function('Mary', 'Army', True)
+  test_function('cinema', 'iceman', True)
+  test_function('jake', 'jay', False)
 
-class Test(unittest.TestCase):
-    
-    def test1(self):
-        self.assertEqual(anagrams('abba', ['aabb', 'abcd', 'bbaa', 'dada']), ['aabb', 'bbaa'])
-    
-    def test2(self):
-        self.assertEqual(anagrams('racer', ['crazer', 'carer', 'racar', 'caers', 'racer']), ['carer', 'racer'])
-    
-if __name__ == '__main__':
-    unittest.main()
+def is_anagram(string1, string2):
+  return sorted(string1.lower()) == sorted(string2.lower())
+
+def test_function(function_arg1, function_arg2, expected_result):
+  print(is_anagram(function_arg1, function_arg2))
+  assert(is_anagram(function_arg1, function_arg2)) == expected_result
+
+def screen_clear():
+  if os.name == 'posix':
+    _ = os.system('clear')
+  else:
+    _ = os.system('cls')
+
+main()

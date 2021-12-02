@@ -1,117 +1,74 @@
-import unittest
-import types
-import cmath
+import os
 
-dicFib = { 0:0 ,1 :1 }
-iterations = 0
+def main():
+  screen_clear()
+  test_function(1, 1)
+  test_function(2, 1)
+  test_function(3, 2)
+  test_function(4, 3)
+  test_function(5, 5)
+  test_function(17, 1597)
+  test_function(34, 5702887)
 
-def fib(x):
-    if type(cal_fib()) == types.GeneratorType:
-        counter = 0
-        for number in cal_fib():
-            if counter == abs(x):
-                if x < 0 and x % 2 == 0:
-                    return number * -1
-                else:
-                    return number
-            counter += 1
+def fibonacci(num):
+  if num < 0:
+    print('Invalid Input')
+  elif num == 0:
+    return 0
+  elif num <= 2:
+    return 1
+  else:
+    return fibonacci(num - 1) + fibonacci(num - 2)
 
-def cal_fib():
-    a, b = 0, 1
-    while 1:
-        yield a
-        a, b = b, a + b
+def fibonacci_normal(num):
+  a = 0
+  b = 1
+  s = 0
+  if num < 0:
+    print('Invalid Input')
+  elif num == 0:
+    return 0
+  elif num == 1:
+    return 1
+  else:
+    for i in range(1, num):
+      s = a + b
+      a = b
+      b = s
+    return b
 
-def fib2(n):
-    v1, v2, v3 = 1, 1, 0    # initialise a matrix [[1,1],[1,0]]
-    for rec in bin(n)[3:]:  # perform fast exponentiation of the matrix (quickly raise it to the nth power)
-        calc = v2*v2
-        v1, v2, v3 = v1*v1+calc, (v1+v3)*v2, calc+v3*v3
-        if rec=='1':    v1, v2, v3 = v1+v2, v1, v2
-    return v2
+def fibonacci_dynamic(num):
+  fib_array = [0, 1]
+  # Check if num is less than 0
+  if num <= 0:
+    print('Invalid Input')
+  # Check if num is less than len(fib_array)
+  elif num < len(fib_array):
+    return fib_array[num]
+  elif num == len(fib_array):
+    return fib_array[num - 1]
+  else:
+    temp_fib = fibonacci(num - 1) + fibonacci(num - 2)
+    fib_array.append(temp_fib)
+    return temp_fib
 
-def fib3(n):
-    a, b = 0, 1
-    while n:
-        a, b, n = b, a + b, n - 1
-    return a
+def test_function(a1, e):
+  # a1 = first argument
+  # e = expected result
+  s = fibonacci(a1)
+  print(s)
+  assert(s) == e
+  s = fibonacci_normal(a1)
+  print(s)
+  assert(s) == e
+  s = fibonacci_dynamic(a1)
+  print(s)
+  #assert(s) == e
 
-def fib4(n):
-    if  (n in dicFib):      
-        return dicFib[n]    
-    else :
-        global iterations               
-        fib = fib4(n - 2) + fib4(n - 1)
-        dicFib[n] = fib
-        iterations += 1
-        return fib
+def screen_clear():
+  if os.name == 'posix':
+    _ = os.system('clear')
+  else:
+    _ = os.system('cls')
 
-def fib5(n):
-    lsa = (1 / cmath.sqrt(5)) * pow(((1 + cmath.sqrt(5)) / 2), n)
-    rsa = (1 / cmath.sqrt(5)) * pow(((1 - cmath.sqrt(5)) / 2), n)
-    fib = lsa-rsa
-    #coerce to real so we can round the complex result
-    fn = round(fib.real) 
-    return fn 
-
-def fib6(n):
-    if n < 0 and n % 2 == 0:
-        return _fib(abs(n))[0] * (-1)
-    else:
-        return _fib(n)[0]
-
-
-# (Private) Returns the tuple (F(n), F(n+1)).
-def _fib(n):
-    if n == 0:
-        return (0, 1)
-    else:
-        a, b = _fib(n // 2)
-        c = a * (b * 2 - a)
-        d = a * a + b * b
-        if n % 2 == 0:
-            return (c, d)
-        else:
-            return (d, c + d)
-
-"""
-print(fib(0))
-print(fib(1))
-print(fib(2))
-print(fib(3))
-print(fib(5))
-print(fib(-6))
-print(fib(-13))"""
-print(fib6(100000))
-"""
-class Test(unittest.TestCase):
-    
-    def test1(self):
-        self.assertEqual(fib(0), 0)
-    
-    def test2(self):
-        self.assertEqual(fib(1), 1)
-    
-    def test3(self):
-        self.assertEqual(fib(2), 1)
-    
-    def test4(self):
-        self.assertEqual(fib(3), 2)
-    
-    def test5(self):
-        self.assertEqual(fib(4), 3)
-    
-    def test6(self):
-        self.assertEqual(fib(5), 5)
-    
-    def test7(self):
-        self.assertEqual(fib(6), 8)
-    
-    def test8(self):
-        self.assertEqual(fib(-6), -8)
-    
-    def test9(self):
-        self.assertEqual(fib(-13), 233)
-    
-if __name__ == '__main__':
-    unittest.main()"""
+main()
